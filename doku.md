@@ -510,4 +510,36 @@ Todo:
     calculation is not an issue but; how to handle asynchronous function to get the results back???
 
 
-            
+# 09.03.2019 @ Home
+
+Setting up a version control using git and connecting to remote repository
+
+git init -> creates a local git repo
+
+Creating a remote git repo on github.com called RaceControl
+
+Adding the remote repo to the local git configuration
+
+>> git remote rc https://github.com/kopfan/RaceControl
+
+--> rc ist the short name for the remote repository (RaceControl)
+
+Try to connect the local and the remote repo caused issue due to unrelated histories.
+
+>> git push rc master -> not successful as there are files on the remote repo (LICENSE)
+
+Try to merge the repos
+
+>> git pull rc master -> not successful due to unrelated histories
+
+Force the merge via
+
+>> git pull rc master --allow-unrelated-histories -> success
+
+Push the local files to the remote repo:
+
+>> git push rc master -> success
+
+
+
+

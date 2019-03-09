@@ -16,3 +16,5 @@ Polish the button-creation with Div and Span and/or css for user friendlyness
 
 Learn how to link documents in mongo-db together, e.g. race-collection with racer collection
 
+Connect the github repository with netlify for deploying the site
+
