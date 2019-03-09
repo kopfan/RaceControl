@@ -1,0 +1,25 @@
+prepare package.json
+prepare app.json
+
+npm install eslint
+npm install express
+npm install chalk
+npm install debug
+npm install morgan
+npm install nodemon
+npm install bootstrap
+npm install jquery
+npm install path
+mpm install ejs
+
+setting up the application: app.use/app.set ...
+    -> declare folders to be used for css,js,views, templating engine ejs
+
+
+grabbing a template from https://www.bootstrapzero.com/
+
+creating an index.ejs -> struggling with local sources for css/js, bootstrap, jquery
+    -> linking to starter and finisher pages
+
+grabbing a new css template from getbootstrap.com -> https://getbootstrap.com/docs/4.1/examples/cover/# 
+

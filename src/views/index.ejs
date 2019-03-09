@@ -1,0 +1,59 @@
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="favicon.ico">
+
+    <title><%=title%></title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="style.css" rel="stylesheet">
+  </head>
+
+  <body class="text-center">
+
+    <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+      <header class="masthead mb-auto">
+        <div class="inner">
+          <h3 class="masthead-brand">Cover</h3>
+          <nav class="nav nav-masthead justify-content-center">
+          <%for(let i=0; i<nav.length; i++) {%>
+            <%if(active){%>
+              <a class="nav-link active" href='<%=nav[i].link%>'><%=nav[i].title%></a>
+            <%} else{%>
+            <a class="nav-link" href='<%=nav[i].link%>'><%=nav[i].title%></a>
+          <%}}%>
+          </nav>
+        </div>
+      </header>
+
+      <main role="main" class="inner cover">
+        <h1 class="cover-heading"><%=title%></h1>
+        <p class="lead">Custom Text</p>
+        <p class="lead">
+          <a href="#" class="btn btn-lg btn-secondary">Learn more</a>
+        </p>
+      </main>
+
+      <footer class="mastfoot mt-auto">
+        <div class="inner">
+          <p>Footer text</p>
+        </div>
+      </footer>
+    </div>
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="/js/jquery.slim.min.js"></script>   
+    <script src="/js/bootstrap.min.js"></script>
+  </body>
+</html>

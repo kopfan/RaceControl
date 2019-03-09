@@ -1,0 +1,99 @@
+{
+    "_id": ObjectId("5c53f12b3e2a15132c060bbb"),
+    "starter_number": "000003",
+    "races": {
+        "race_id": "1",
+        "race_name": "MADEAST2019",
+        "stages": {
+            "stage_id": "1",
+            "stage_name": "Hexenfelsen",
+            "stage_results": {
+                "stage_start_timestamp_client": "Fri Feb 01 2019 08:11:39 GMT+0100 (Mitteleuropäische Normalzeit)",
+                "stage_start_timestamp_server": ISODate("2019-02-01T07:11:39.568Z")
+            }
+        }
+    }
+}
+
+{
+    "_id": ObjectId("5c76d3dadacf4e19b43cb28c"),
+    "starter_number": "000023",
+    "races": {
+        "race_id": "1",
+        "race_name": "MADEAST2019",
+        "stages": {
+            "stage_id": "1",
+            "stage_name": "Hexenfelsen",
+            "stage_results": {
+                "stage_start_timestamp_client": "1551291354000",
+                "stage_start_timestamp_server": 1551291354000,
+                "stage_finish_timestamp_client": "1551291381000",
+                "stage_finish_timestamp_server": 1551291381000
+            }
+        }
+    }
+}
+
+
+<!DOCTYPE html>
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <title>Dynamically add and remove element with jQuery</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="a_data/style.css" rel="stylesheet" type="text/css">
+
+        <script src="a_data/jquery.js" type="text/javascript"></script>
+        <script src="a_data/script.js" type="text/javascript"></script>
+        
+    </head>
+    <body>
+        <div class="container">
+            <div class="element" id="div_1">
+                <input type="text" placeholder="Enter your skill" id="txt_1" value="4444">&nbsp;<span class="add">Add Skill</span>
+			</div>
+			<div class="element" id="div_3">
+				<input type="text" placeholder="Enter your skill" id="txt_3">&nbsp;
+				<span id="remove_3" class="remove">X</span></div>
+            
+            
+        </div>
+    
+</body></html>
+
+$(document).ready(function(){
+    // Add new element
+    $(".add").click(function(){
+        // Finding total number of elements added
+        var total_element = $(".element").length;
+                    
+        // last <div> with element class id
+        var lastid = $(".element:last").attr("id");
+        var split_id = lastid.split("_");
+        var nextindex = Number(split_id[
+            1
+        ]) + 1;
+
+        var max = 5;
+        // Check total number elements
+        if(total_element < max ){
+            // Adding new div container after last occurance of element class
+            $(".element:last").after("<div class='element' id='div_"+ nextindex +"'></div>");
+                        
+            // Adding element to <div>
+            $("#div_" + nextindex).append("<input type='text' placeholder='Enter your skill' id='txt_"+ nextindex +"'>&nbsp;<span id='remove_" + nextindex + "' class='remove'>X</span>");
+        }
+    });
+
+    // Remove element
+    $('.container').on('click','.remove',function(){
+                
+        var id = this.id;
+        var split_id = id.split("_");
+        var deleteindex = split_id[
+            1
+        ];
+
+        // Remove <div> with id
+        $("#div_" + deleteindex).remove();
+    });
+});

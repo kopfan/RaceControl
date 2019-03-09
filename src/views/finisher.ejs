@@ -1,0 +1,173 @@
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="favicon.ico">
+
+    <title><%=title%></title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="../style.css" rel="stylesheet">
+  </head>
+
+  <body class="text-center">
+
+    <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+      <header class="masthead mb-auto">
+        <div class="inner">
+          <h3 class="masthead-brand">Cover</h3>
+          <nav class="nav nav-masthead justify-content-center">
+          <%for(let i=0; i<nav.length; i++) {%>
+            <%if(active){%>
+              <a class="nav-link active" href='<%=nav[i].link%>'><%=nav[i].title%></a>
+            <%} else{%>
+            <a class="nav-link" href='<%=nav[i].link%>'><%=nav[i].title%></a>
+          <%}}%>
+          </nav>
+        </div>
+      </header>
+
+      <main role="main" class="inner cover">
+        <h1 class="cover-heading"><%=title%></h1>
+        <p class="lead">Custom Text</p>
+        <!--p class="lead">
+          <a href="#" class="btn btn-lg btn-secondary">Learn more</a>
+        </p-->
+
+      <form name="finisherForm" id="finisherForm" action="/stages/finished" method="post">
+                Starter-Number: <input name="starterNumber" id="starterNumber"/><br/>
+                <!-- input id="button" type="submit" name="button" onclick="myFunction();" value="enter"/ -->
+                <input type="submit" value="-- FINISH --" />
+              </form>
+
+        <p class="lead">
+          <h3>Messages</h3>
+          <div id="messageBox">
+          </div>
+          <p class="lead">
+          <h3>Running Starters:</h3>
+          <div id="runningBox">
+          </div>
+        </p>
+
+      </main>
+
+      <footer class="mastfoot mt-auto">
+        <div class="inner">
+          <p>Footer text</p>
+        </div>
+      </footer>
+    </div>
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="/js/jquery.slim.min.js"></script>   
+    <script src="/js/bootstrap.min.js"></script>
+
+    <script src="/js/socket.io.js"></script>
+    <script>
+        var socket = io.connect('http://localhost:8080');
+        socket.on('connect', function(data) {
+            socket.emit('join', 'Hello from finisher');
+        });
+        socket.on('broad', function(data) {
+
+            console.log(data);
+
+            var message = JSON.parse(data);
+            var messageCommand = message.message.command;
+            var starterNumber = message.message.starter_number;
+            
+            $('#messageBox').append(starterNumber + "&nbsp;" + messageCommand + "<br/>");
+
+            // adds the buttons for click-feature to indicate the finished race
+            if(messageCommand==='started'){
+              console.log("command started detected.");
+
+              // Finding total number of finisher-buttons added
+              var finisherCount = $(".finisher").length;
+
+              console.log("finisherCount: " + finisherCount);
+
+              if(finisherCount>0){
+                // last <div> with element class id
+                var lastid = $(".finisher:last").attr("id");
+                var split_id = lastid.split("_");
+                var nextindex = Number(split_id[1]) + 1;
+              }
+              else{
+                var nextindex = 0;
+              }
+
+              $('#runningBox').append(`<input type='button' class='finisher' id='btn_${nextindex}' value='${starterNumber}'/>`)
+            }
+
+        });
+
+        $('#finisherForm').submit(function(e){
+            e.preventDefault();
+            
+            var starterNumber = $('#starterNumber').val();
+            
+            var message   = '{"message": {' +
+                                '"command": "finished",' +
+                                '"hint": "textfield",' +
+                                '"starter_number": "' + starterNumber + '",' + 
+                                '"timestamp_client": "' + Date.parse(new Date()) + '",' + 
+                                '"race_id": "1",' + 
+                                '"race_name": "MADEAST2019",' + 
+                                '"stage_id": "1",' + 
+                                '"stage_name": "Hexenfelsen"' + 
+                              '}' +
+                            '}';
+
+            console.log(message);
+
+            socket.emit('messages', message);
+        });
+
+        // reacts on clicking the finish-buttons, sends the message and removes the button
+        $('#runningBox').on('click','.finisher', function(){
+
+          var starterNumber = this.value;
+
+          console.log("btn clicked [" + starterNumber + "]");
+
+          var message   = '{"message": {' +
+                              '"command": "finished",' +
+                              '"hint": "textfield",' +
+                              '"starter_number": "' + starterNumber + '",' + 
+                              '"timestamp_client": "' + Date.parse(new Date()) + '",' + 
+                              '"race_id": "1",' + 
+                              '"race_name": "MADEAST2019",' + 
+                              '"stage_id": "1",' + 
+                              '"stage_name": "Hexenfelsen"' + 
+                            '}' +
+                          '}';
+
+          console.log(message);
+
+          socket.emit('messages', message);
+
+          var id = this.id;
+          var split_id = id.split("_");
+          var deleteindex = split_id[1];
+
+          // Remove <input-button> with id
+          $("#btn_" + deleteindex).remove();
+
+        });
+        
+    </script>
+
+  </body>
+</html>
