@@ -8,6 +8,56 @@ function stageService() {
     return date;
   }
 
+  async function getStageResultTmp(dataObject) {
+    debug('calling function getStageResultTmp');
+    const messageObject = JSON.parse(dataObject);
+    const starterNumber = messageObject.message.starter_number;
+    const raceId = messageObject.message.race_id;
+    const raceName = messageObject.message.race_name;
+    const stageId = messageObject.message.stage_id;
+    const stageName = messageObject.message.stage_name;
+
+    const url = 'mongodb://localhost:27017';
+    const dbName = 'timetracker';
+
+    const client = new MongoClient(url);
+
+    client.connect((err, client) => {
+      debug('Connected correctly to server');
+
+      const db = client.db(dbName);
+
+      db.collection('racer').findOne({
+        starter_number: starterNumber,
+        'races.race_id': raceId,
+        'races.race_name': raceName,
+        'races.stages.stage_id': stageId,
+        'races.stages.stage_name': stageName,
+      }, {
+        'races.stages.stage_results.stage_start_timestamp_client': 1,
+        'races.stages.stage_results.stage_start_timestamp_server': 1,
+        'races.stages.stage_results.stage_finish_timestamp_client': 1,
+        'races.stages.stage_results.stage_finish_timestamp_server': 1,
+      }, (err, doc) => {
+        if (err) {
+          debug(err);
+        } else if (doc) {
+          debug('document found');
+
+          const startTimeServer = doc.races.stages.stage_results.stage_start_timestamp_server;
+          const finishTimeServer = doc.races.stages.stage_results.stage_finish_timestamp_server;
+
+          const stageTimeServer = finishTimeServer - startTimeServer;
+
+          debug(`result #### ${stageTimeServer}`);
+
+          return stageTimeServer;
+        }
+        debug('no document found');        
+      });
+    });
+  }
+
   function getStageResult(dataObject) {
     // timeStampProvider = client or server, if client use the timestamps from client and vice versa
     const messageObject = JSON.parse(dataObject);
@@ -18,8 +68,8 @@ function stageService() {
     const stageName = messageObject.message.stage_name;
 
     let finishTimeClient = 0;
-    let finishTimeServer = 0; 
-    
+    let finishTimeServer = 0;
+
     const url = 'mongodb://localhost:27017';
     const dbName = 'timetracker';
 
@@ -63,7 +113,7 @@ function stageService() {
         // this is most propably very bad code!!!!!! -> return befor client.close and error handling
         return [finishTimeClient, finishTimeServer];
       } catch (err) {
-        debug(err.stack);        
+        debug(err.stack);
       }
       client.close();
     }());
@@ -190,7 +240,7 @@ function stageService() {
       client.close();
     }());
 
-    debug(`##### getStageResult: ${getStageResult(dataObject)}`);
+    // debug(`##### getStageResult: ${getStageResultTmp(dataObject)}`);
   }
 
   return {
@@ -198,6 +248,7 @@ function stageService() {
     storeStartData,
     storeFinishData,
     storeStartDataObject,
+    getStageResultTmp,
   };
 }
 

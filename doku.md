@@ -540,6 +540,10 @@ Push the local files to the remote repo:
 
 >> git push rc master -> success
 
+# 12.03.2019 @ Slub
+
+todo:
+  - calculate raceresult, find a way to deal with the asynchronous characteristics 
 
 
 

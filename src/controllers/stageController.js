@@ -30,6 +30,7 @@ function stageController(stageService, nav, io) {
         stageService.storeStartDataObject(data);
       } else if (command === 'finished') {
         stageService.storeFinishData(data);
+        debug(`stageTimeServer = ${stageService.getStageResultTmp(data)}`);
       }
     });
   });
